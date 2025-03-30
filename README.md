@@ -12,24 +12,20 @@
 
 The GPT Researcher MCP Server provides Model Context Protocol (MCP) integration for GPT Researcher, allowing AI assistants to perform autonomous, comprehensive web research and generate reports via the MCP protocol.
 
-## Demo with Claude Desktop
-https://github.com/user-attachments/assets/ef97eea5-a409-42b9-8f6d-b82ab16c52a8
-
 
 ## Why GPT Researcher MCP?
 
 While many AI apps can access web search tools with MCP, GPT Researcher MCP delivers superior results. Standard search tools return raw results requiring manual filtering, often containing irrelevant sources and wasting context window space.
 
-GPT Researcher performs autonomous, comprehensive research - not just search. It intelligently explores and validates multiple sources, focusing only on relevant and up-to-date information. Though slightly slower (30-40 seconds) than standard search, it delivers:
+GPT Researcher performs autonomous, comprehensive research - not just search. It intelligently explores and validates multiple sources, focusing only on relevant and up-to-date information. Though slightly slower (~30 seconds wait) than standard search, it delivers:
 
 - Higher quality information
 - Optimized context usage
 - Comprehensive results
 - Better reasoning for LLMs
 
-## MCP Server Capabilities
-
-The MCP server exposes the following capabilities to AI assistants:
+## Demo with Claude Desktop
+https://github.com/user-attachments/assets/ef97eea5-a409-42b9-8f6d-b82ab16c52a8
 
 ### Resources
 - `research_resource`: Get web resources related to a given task via research.
