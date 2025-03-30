@@ -9,9 +9,7 @@
 [![Discord Follow](https://dcbadge.vercel.app/api/server/QgZXvJAccX?style=for-the-badge&theme=clean-inverted&?compact=true)](https://discord.gg/QgZXvJAccX)
 
 </div>
-
-The GPTR MCP Server provides MCP integration for GPT Researcher, allowing LLM applications to perform deep research via the MCP protocol.
-
+GPTR MCP Server provides an integration for GPT Researcher, allowing LLM applications to perform deep research via the MCP protocol.
 
 ## Why GPT Researcher MCP?
 
