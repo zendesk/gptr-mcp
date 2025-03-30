@@ -10,14 +10,14 @@
 
 </div>
 
-The GPT Researcher MCP Server provides Model Context Protocol (MCP) integration for GPT Researcher, allowing AI applications to perform autonomous, comprehensive web research and generate reports via the MCP protocol.
+The GPTR MCP Server provides MCP integration for GPT Researcher, allowing LLM applications to perform deep research via the MCP protocol.
 
 
 ## Why GPT Researcher MCP?
 
-While many AI apps can access web search tools with MCP, GPT Researcher MCP delivers superior results. Standard search tools return raw results requiring manual filtering, often containing irrelevant sources and wasting context window space.
+While apps can access web search tools with MCP, GPTR MCP delivers deep results. Standard search tools return raw results requiring manual filtering, often containing irrelevant sources and wasting context window space.
 
-GPT Researcher performs autonomous, comprehensive research - not just search. It intelligently explores and validates multiple sources, focusing only on relevant and up-to-date information. Though slightly slower (~30 seconds wait) than standard search, it delivers:
+GPT Researcher performs autonomous, deep research. It intelligently explores and validates multiple sources, focusing only on relevant and up-to-date information. Though slightly slower (~30 seconds wait) than standard search, it delivers:
 
 ✨ Higher quality information
 📊 Optimized context usage
