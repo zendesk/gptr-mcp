@@ -9,13 +9,12 @@
 [![Discord Follow](https://dcbadge.vercel.app/api/server/QgZXvJAccX?style=for-the-badge&theme=clean-inverted&?compact=true)](https://discord.gg/QgZXvJAccX)
 
 </div>
-GPTR MCP Server provides an integration for GPT Researcher, allowing LLM applications to perform deep research via the MCP protocol.
 
 ## Why GPT Researcher MCP?
 
-While apps can access web search tools with MCP, GPTR MCP delivers deep results. Standard search tools return raw results requiring manual filtering, often containing irrelevant sources and wasting context window space.
+While apps can access web search tools with MCP, GPT Researcher MCP delivers deep research results. Standard search tools return raw results requiring manual filtering, often containing irrelevant sources and wasting context window space.
 
-GPT Researcher performs autonomous, deep research. It intelligently explores and validates multiple sources, focusing only on relevant and up-to-date information. Though slightly slower (~30 seconds wait) than standard search, it delivers:
+GPT intelligently explores and validates multiple sources, focusing only on relevant and up-to-date information. Though slightly slower (~30 seconds wait) than standard search, it delivers:
 
 ✨ Higher quality information
 📊 Optimized context usage
