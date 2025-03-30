@@ -46,31 +46,14 @@ The MCP server exposes the following capabilities to AI assistants:
 - `server.py` - Main MCP server implementation with endpoint decorators
 - `utils.py` - Utility functions and helpers for the server
 
-## Architecture
-
-The code has been organized into a modular structure:
-
-1. **server.py**: Contains the core MCP server configuration and endpoint handlers with decorators:
-   - `@mcp.resource("research://{topic}")` - Research resource endpoint
-   - `@mcp.tool()` - Tool endpoints for research operations
-   - `@mcp.prompt()` - Prompt template for research queries
-   - Server initialization and running logic
-
-2. **utils.py**: Contains utility functions and helpers:
-   - Response formatting utilities
-   - Research store management
-   - Source formatting helpers
-   - Exception handling
-   - Research prompt generation
-
 ## Prerequisites
 
 Before running the MCP server, make sure you have:
 
 1. Python 3.10 or higher installed
 2. API keys for the services you plan to use:
-   - OpenAI API key
-   - Tavily API key (or other search APIs you plan to use)
+   - [OpenAI API key](https://platform.openai.com/api-keys)
+   - [Tavily API key](https://app.tavily.com)
 
 ## Installation
 
@@ -80,9 +63,9 @@ git clone https://github.com/assafelovic/gpt-researcher.git
 cd gpt-researcher
 ```
 
-2. Install the mcp-server dependencies:
+2. Install the gptr-mcp dependencies:
 ```bash
-cd mcp-server
+cd gptr-mcp
 pip install -r requirements.txt
 ```
 
@@ -96,6 +79,7 @@ pip install -r requirements.txt
    OPENAI_API_KEY=your_openai_api_key
    TAVILY_API_KEY=your_tavily_api_key
    ```
+You can also add any other env variable for your GPT Researcher configuration.
 
 ## Running the MCP Server
 
@@ -120,7 +104,7 @@ Once the server is running, you'll see output indicating that the server is read
 There are two primary ways to integrate your MCP server with Claude:
 
 1. **[API Integration](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/claude-integration)** - For programmatic access through Claude API
-2. **[Desktop Integration](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/claude-desktop-integration)** - For using with Claude desktop application on Mac
+2. **[Claude Desktop Integration](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/claude-desktop-integration)** - For using with Claude desktop application on Mac
 
 For detailed instructions on each method, follow the links above.
 
