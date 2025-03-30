@@ -12,7 +12,7 @@
 
 ## Why GPT Researcher MCP?
 
-While apps can access web search tools with MCP, GPT Researcher MCP delivers deep research results. Standard search tools return raw results requiring manual filtering, often containing irrelevant sources and wasting context window space.
+While apps can access web search tools with MCP, **GPT Researcher MCP delivers deep research results.** Standard search tools return raw results requiring manual filtering, often containing irrelevant sources and wasting context window space.
 
 GPT Researcher autonomously explores and validates numerous sources, focusing only on relevant, trusted and up-to-date information. Though slightly slower than standard search (~30 seconds wait), it delivers:
 
