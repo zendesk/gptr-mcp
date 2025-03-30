@@ -96,14 +96,13 @@ Once the server is running, you'll see output indicating that the server is read
 
 ## Integrating with Claude
 
-There are two primary ways to integrate your MCP server with Claude:
+You can integrate your MCP server with Claude using:
 
-1. **[API Integration](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/claude-integration)** - For programmatic access through Claude API
-2. **[Claude Desktop Integration](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/claude-desktop-integration)** - For using with Claude desktop application on Mac
+**[Claude Desktop Integration](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/claude-integration)** - For using with Claude desktop application on Mac
 
-For detailed instructions on each method, follow the links above.
+For detailed instructions, follow the link above.
 
-## Claude Desktop Integration
+## 💻 Claude Desktop Integration
 
 To integrate your locally running MCP server with Claude for Mac, you'll need to:
 
