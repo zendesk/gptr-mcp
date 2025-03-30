@@ -14,7 +14,7 @@
 
 While apps can access web search tools with MCP, GPT Researcher MCP delivers deep research results. Standard search tools return raw results requiring manual filtering, often containing irrelevant sources and wasting context window space.
 
-GPT intelligently explores and validates multiple sources, focusing only on relevant and up-to-date information. Though slightly slower (~30 seconds wait) than standard search, it delivers:
+GPT Researcher autonomously explores and validates numerous sources, focusing only on relevant, trusted and up-to-date information. Though slightly slower than standard search (~30 seconds wait), it delivers:
 
 - ✨ Higher quality information
 - 📊 Optimized context usage
