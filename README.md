@@ -2,7 +2,7 @@
 
 <img src="https://github.com/assafelovic/gpt-researcher/assets/13554167/20af8286-b386-44a5-9a83-3be1365139c3" alt="Logo" width="80">
 
-# GPT Researcher MCP Server
+# 🔍 GPT Researcher MCP Server
 
 [![Website](https://img.shields.io/badge/Official%20Website-gptr.dev-teal?style=for-the-badge&logo=world&logoColor=white&color=0891b2)](https://gptr.dev)
 [![Documentation](https://img.shields.io/badge/Documentation-DOCS-f472b6?logo=googledocs&logoColor=white&style=for-the-badge)](https://docs.gptr.dev)
@@ -10,7 +10,7 @@
 
 </div>
 
-The GPT Researcher MCP Server provides Model Context Protocol (MCP) integration for GPT Researcher, allowing AI assistants to perform autonomous, comprehensive web research and generate reports via the MCP protocol.
+The GPT Researcher MCP Server provides Model Context Protocol (MCP) integration for GPT Researcher, allowing AI applications to perform autonomous, comprehensive web research and generate reports via the MCP protocol.
 
 
 ## Why GPT Researcher MCP?
@@ -19,12 +19,12 @@ While many AI apps can access web search tools with MCP, GPT Researcher MCP deli
 
 GPT Researcher performs autonomous, comprehensive research - not just search. It intelligently explores and validates multiple sources, focusing only on relevant and up-to-date information. Though slightly slower (~30 seconds wait) than standard search, it delivers:
 
-- Higher quality information
-- Optimized context usage
-- Comprehensive results
-- Better reasoning for LLMs
+✨ Higher quality information
+📊 Optimized context usage
+🔎 Comprehensive results
+🧠 Better reasoning for LLMs
 
-## Demo with Claude Desktop
+## 💻 Claude Desktop Demo
 https://github.com/user-attachments/assets/ef97eea5-a409-42b9-8f6d-b82ab16c52a8
 
 ### Resources
@@ -41,11 +41,6 @@ https://github.com/user-attachments/assets/ef97eea5-a409-42b9-8f6d-b82ab16c52a8
 
 - `research_query`: Create a research query prompt
 
-## Files Structure
-
-- `server.py` - Main MCP server implementation with endpoint decorators
-- `utils.py` - Utility functions and helpers for the server
-
 ## Prerequisites
 
 Before running the MCP server, make sure you have:
@@ -55,7 +50,7 @@ Before running the MCP server, make sure you have:
    - [OpenAI API key](https://platform.openai.com/api-keys)
    - [Tavily API key](https://app.tavily.com)
 
-## Installation
+## ⚙️ Installation
 
 1. Clone the GPT Researcher repository:
 ```bash
@@ -81,7 +76,7 @@ pip install -r requirements.txt
    ```
 You can also add any other env variable for your GPT Researcher configuration.
 
-## Running the MCP Server
+## 🚀 Running the MCP Server
 
 You can start the MCP server in two ways:
 
@@ -120,7 +115,7 @@ To integrate your locally running MCP server with Claude for Mac, you'll need to
 
 For complete step-by-step instructions, see the [Claude Desktop Integration guide](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/claude-integration).
 
-## Example Usage with Claude
+## 📝 Example Usage with Claude
 
 ```
 User: I'm considering investing in NVIDIA. Can you research the current state of the company, recent stock performance, latest product announcements, and analyst opinions?
@@ -162,7 +157,7 @@ Claude: Based on my research, here's a comprehensive analysis of NVIDIA's curren
 - Diversifying beyond chips with DGX Cloud, AI software platforms, and automotive solutions
 ```
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 If you encounter issues while running the MCP server:
 
@@ -171,17 +166,17 @@ If you encounter issues while running the MCP server:
 3. Ensure all dependencies are installed correctly
 4. Check the server logs for error messages
 
-## Next Steps
+## 👣 Next Steps
 
 - Explore the [MCP protocol documentation](https://docs.anthropic.com/claude/docs/model-context-protocol) to better understand how to integrate with Claude
 - Learn about [GPT Researcher's core features](https://docs.gptr.dev/docs/gpt-researcher/getting-started/introduction) to enhance your research capabilities
 - Check out the [Advanced Usage](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/advanced-usage) guide for more configuration options
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Support / Contact
+## 📞 Support / Contact
 
 - [Community Discord](https://discord.gg/QgZXvJAccX)
 - Email: assaf.elovic@gmail.com
