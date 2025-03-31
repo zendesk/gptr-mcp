@@ -29,7 +29,8 @@ https://github.com/user-attachments/assets/ef97eea5-a409-42b9-8f6d-b82ab16c52a8
 
 ### Primary Tools
 
-- `conduct_research`: Performs autonomous web research on a topic, finding the most reliable and relevant information
+- `deep_research`: Performs deep web research on a topic, finding the most reliable and relevant information
+- `quick_search`: Performs a fast web search optimized for speed over quality, returning search results with snippets. Supports any GPTR supported web retriever such as Tavily, Bing, Google, etc... Learn more [here](https://docs.gptr.dev/docs/gpt-researcher/search-engines/retrievers)
 - `write_report`: Generate a report based on research results
 - `get_research_sources`: Get the sources used in the research
 - `get_research_context`: Get the full context of the research

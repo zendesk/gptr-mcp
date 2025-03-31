@@ -9,7 +9,7 @@ import os
 import sys
 import uuid
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 from gpt_researcher import GPTResearcher
@@ -88,9 +88,9 @@ async def research_resource(topic: str) -> str:
 
 
 @mcp.tool()
-async def conduct_research(query: str) -> Dict[str, Any]:
+async def deep_research(query: str) -> Dict[str, Any]:
     """
-    Conduct a web research on a given query using GPT Researcher. 
+    Conduct a web deep research on a given query using GPT Researcher. 
     Use this tool when you need time-sensitive, real-time information like stock prices, news, people, specific knowledge, etc.
     
     Args:
@@ -132,6 +132,43 @@ async def conduct_research(query: str) -> Dict[str, Any]:
         })
     except Exception as e:
         return handle_exception(e, "Research")
+
+
+@mcp.tool()
+async def quick_search(query: str) -> Dict[str, Any]:
+    """
+    Perform a quick web search on a given query and return search results with snippets.
+    This optimizes for speed over quality and is useful when an LLM doesn't need in-depth
+    information on a topic.
+    
+    Args:
+        query: The search query
+        
+    Returns:
+        Dict containing search results and snippets
+    """
+    logger.info(f"Performing quick search on query: {query}...")
+    
+    # Generate a unique ID for this search session
+    search_id = str(uuid.uuid4())
+    
+    # Initialize GPT Researcher
+    researcher = GPTResearcher(query)
+    
+    try:
+        # Perform quick search
+        search_results = await researcher.quick_search(query=query)
+        mcp.researchers[search_id] = researcher
+        logger.info(f"Quick search completed for ID: {search_id}")
+        
+        return create_success_response({
+            "search_id": search_id,
+            "query": query,
+            "result_count": len(search_results) if search_results else 0,
+            "search_results": search_results
+        })
+    except Exception as e:
+        return handle_exception(e, "Quick search")
 
 
 @mcp.tool()
