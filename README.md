@@ -43,7 +43,8 @@ https://github.com/user-attachments/assets/ef97eea5-a409-42b9-8f6d-b82ab16c52a8
 
 Before running the MCP server, make sure you have:
 
-1. Python 3.10 or higher installed
+1. Python 3.11 or higher installed
+   - **Important**: GPT Researcher >=0.12.16 requires Python 3.11+
 2. API keys for the services you plan to use:
    - [OpenAI API key](https://platform.openai.com/api-keys)
    - [Tavily API key](https://app.tavily.com)
@@ -130,6 +131,8 @@ docker run -d \
   gpt-mcp-server
 ```
 
+**Note**: The Docker image uses Python 3.11 to meet the requirements of gpt-researcher >=0.12.16. If you encounter errors during the build, ensure you're using the latest Dockerfile from this repository.
+
 Once the server is running, you'll see output indicating that the server is ready to accept connections. You can verify it's working by:
 
 1. Accessing the OpenAPI docs at http://localhost:8000/docs
@@ -202,14 +205,32 @@ Claude: Based on my research, here's a comprehensive analysis of NVIDIA's curren
 If you encounter issues while running the MCP server:
 
 1. Make sure your API keys are correctly set in the `.env` file
-2. Check that you're using Python 3.10 or higher
+2. Check that you're using Python 3.11 or higher (required by gpt-researcher >=0.12.16)
 3. Ensure all dependencies are installed correctly
 4. Check the server logs for error messages
 
-If you're running with Docker and experiencing connection issues:
+If you're running with Docker and experiencing issues:
+
 1. Verify the container is running: `docker ps | grep gpt-mcp-server`
 2. Check container logs: `docker logs gpt-mcp-server`
 3. Confirm the server is binding to all interfaces - logs should show listening on 0.0.0.0:8000
+4. If you see dependency errors during build:
+   - Ensure you're using the updated Dockerfile with Python 3.11
+   - Try rebuilding with the `--no-cache` flag: `docker build --no-cache -t gpt-mcp-server .`
+   - Check the version of gpt-researcher in your requirements.txt matches the Python version
+
+For local installation issues:
+```bash
+# Check your Python version (must be 3.11+)
+python --version
+
+# Update pip to the latest version
+pip install --upgrade pip
+
+# If you're using a virtual environment, create a new one with Python 3.11
+python3.11 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
 ## 👣 Next Steps
 
