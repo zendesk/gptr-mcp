@@ -12,7 +12,7 @@ services:
       - .env
     networks:
       - n8n-mcp-net
-    restart: unless-stopped
+    restart: unless-stopped 
 
 networks:
   n8n-mcp-net:

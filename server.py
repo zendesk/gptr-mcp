@@ -281,7 +281,7 @@ def run_server():
     
     # Let FastMCP handle the event loop
     try:
-        mcp.run(host="0.0.0.0")
+        mcp.run()
         # Note: If we reach here, the server has stopped
         logger.info("MCP Server has stopped")
     except Exception as e:
