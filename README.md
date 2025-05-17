@@ -76,7 +76,7 @@ You can also add any other env variable for your GPT Researcher configuration.
 
 ## 🚀 Running the MCP Server
 
-You can start the MCP server in two ways:
+You can run the MCP server in several ways:
 
 ### Method 1: Directly using Python
 
@@ -90,7 +90,50 @@ python server.py
 mcp run server.py
 ```
 
-Once the server is running, you'll see output indicating that the server is ready to accept connections.
+### Method 3: Using Docker (recommended for production)
+
+#### Option A: Standalone Mode
+
+This is the simplest way to run the server if you don't need to connect to other containers:
+
+```bash
+# Build and run with docker-compose
+docker-compose -f docker-compose.standalone.yml up -d
+
+# Or manually:
+docker build -t gpt-mcp-server .
+docker run -d \
+  --name gpt-mcp-server \
+  -p 8000:8000 \
+  --env-file .env \
+  gpt-mcp-server
+```
+
+#### Option B: With Network for n8n Integration
+
+If you need to connect to other services like n8n on the same network:
+
+```bash
+# Create the network if it doesn't exist
+docker network create n8n-mcp-net
+
+# Build and run with docker-compose
+docker-compose up -d
+
+# Or manually:
+docker build -t gpt-mcp-server .
+docker run -d \
+  --name gpt-mcp-server \
+  --network n8n-mcp-net \
+  -p 8000:8000 \
+  --env-file .env \
+  gpt-mcp-server
+```
+
+Once the server is running, you'll see output indicating that the server is ready to accept connections. You can verify it's working by:
+
+1. Accessing the OpenAPI docs at http://localhost:8000/docs
+2. Testing the MCP endpoint at http://localhost:8000/mcp
 
 ## Integrating with Claude
 
@@ -163,6 +206,11 @@ If you encounter issues while running the MCP server:
 3. Ensure all dependencies are installed correctly
 4. Check the server logs for error messages
 
+If you're running with Docker and experiencing connection issues:
+1. Verify the container is running: `docker ps | grep gpt-mcp-server`
+2. Check container logs: `docker logs gpt-mcp-server`
+3. Confirm the server is binding to all interfaces - logs should show listening on 0.0.0.0:8000
+
 ## 👣 Next Steps
 
 - Explore the [MCP protocol documentation](https://docs.anthropic.com/claude/docs/model-context-protocol) to better understand how to integrate with Claude
@@ -181,91 +229,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 <p align="right">
   <a href="#top">⬆️ Back to Top</a>
 </p>
-
-# GPT Researcher MCP Server
-
-This repository provides a Model Context Protocol (MCP) server for GPT Researcher, allowing AI assistants to conduct web research and generate reports via the MCP protocol.
-
-## Setup
-
-1. Clone this repository
-2. Create a `.env` file in the root directory with your API keys:
-   ```
-   OPENAI_API_KEY=your-openai-key
-   TAVILY_API_KEY=your-tavily-key (optional)
-   ```
-
-## Running Locally
-
-```bash
-pip install -r requirements.txt
-python server.py
-```
-
-## Running with Docker
-
-### Option 1: Standalone Mode
-
-This is the simplest way to run the server if you don't need to connect to other containers:
-
-```bash
-# Build and run with docker-compose
-docker-compose -f docker-compose.standalone.yml up -d
-
-# Or manually:
-docker build -t gpt-mcp-server .
-docker run -d \
-  --name gpt-mcp-server \
-  -p 8000:8000 \
-  --env-file .env \
-  gpt-mcp-server
-```
-
-### Option 2: With Network for n8n Integration
-
-If you need to connect to other services like n8n on the same network:
-
-```bash
-# Create the network if it doesn't exist
-docker network create n8n-mcp-net
-
-# Build and run with docker-compose
-docker-compose up -d
-
-# Or manually:
-docker build -t gpt-mcp-server .
-docker run -d \
-  --name gpt-mcp-server \
-  --network n8n-mcp-net \
-  -p 8000:8000 \
-  --env-file .env \
-  gpt-mcp-server
-```
-
-## Testing
-
-After starting the server, you can verify it's working by:
-
-1. Accessing the OpenAPI docs at http://localhost:8000/docs
-2. Testing the MCP endpoint at http://localhost:8000/mcp
-
-## MCP Tools and Resources
-
-The server provides several MCP tools:
-
-- `deep_research`: Conduct in-depth web research on a topic
-- `quick_search`: Perform a fast web search
-- `write_report`: Generate a report from research
-- And more...
-
-For using this server with Claude or other MCP clients, point them to the MCP endpoint at http://localhost:8000/mcp.
-
-## Troubleshooting
-
-If you're having connection issues when running in Docker, make sure:
-
-1. Your API keys are properly set in the .env file
-2. The container is running: `docker ps | grep gpt-mcp-server`
-3. The server is binding to all interfaces: The logs should show it listening on 0.0.0.0:8000
-
-For logs, run: `docker logs gpt-mcp-server`
