@@ -177,7 +177,7 @@ async def write_report(research_id: str, custom_prompt: Optional[str] = None) ->
     Generate a report based on previously conducted research.
     
     Args:
-        research_id: The ID of the research session from conduct_research
+        research_id: The ID of the research session from deep_research
         custom_prompt: Optional custom prompt for report generation
         
     Returns:
