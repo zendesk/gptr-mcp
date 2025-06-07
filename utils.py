@@ -128,7 +128,7 @@ def create_research_prompt(topic: str, goal: str, report_format: str = "research
     1. Use the "research://{topic}" resource to directly access context about this topic if it exists
        or if you want to get straight to the information without tracking a research ID.
        
-    2. Use the conduct_research tool to perform new research and get a research_id for later use.
+    2. Use the deep_research tool to perform new research and get a research_id for later use.
        This tool also returns the context directly in its response, which you can use immediately.
     
     After getting context, you can:
