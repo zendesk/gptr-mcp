@@ -61,7 +61,7 @@ For detailed setup instructions, see the [full Claude Desktop Integration sectio
 ### Primary Tools
 
 - `deep_research`: Performs deep web research on a topic, finding the most reliable and relevant information
-- `quick_search`: Performs a fast web search optimized for speed over quality, returning search results with snippets. Supports any GPTR supported web retriever such as Tavily, Bing, Google, etc... Learn more [here](https://docs.gptr.dev/docs/gpt-researcher/search-engines/retrievers)
+- `quick_search`: Performs a fast web search optimized for speed over quality, returning search results with snippets. Supports any GPTR supported web retriever such as Tavily, Bing, Google, etc... Learn more [here](https://docs.gptr.dev/docs/gpt-researcher/search-engines)
 - `write_report`: Generate a report based on research results
 - `get_research_sources`: Get the sources used in the research
 - `get_research_context`: Get the full context of the research
@@ -220,7 +220,10 @@ python server.py
   "mcpServers": {
     "gpt-researcher": {
       "command": "python",
-      "args": ["/absolute/path/to/server.py"]
+      "args": ["/absolute/path/to/server.py"],
+      "env": {
+         "..."
+      }
     }
   }
 }
@@ -338,9 +341,9 @@ For complete step-by-step instructions, see the [Claude Desktop Integration guid
 ```
 User: I'm considering investing in NVIDIA. Can you research the current state of the company, recent stock performance, latest product announcements, and analyst opinions?
 
-Claude: I'll help you research NVIDIA for investment purposes. This will take a moment as I conduct comprehensive research to find the most up-to-date information about their stock performance, recent developments, and expert analysis.
+Claude: I'll help you research NVIDIA for investment purposes. This will take a moment as I conduct deep research to find the most up-to-date information about their stock performance, recent developments, and expert analysis.
 
-[Claude uses conduct_research tool - this takes 30-40 seconds]
+[Claude uses deep_research tool - this takes 30-40 seconds]
 
 Claude: Based on my research, here's a comprehensive analysis of NVIDIA's current state:
 
