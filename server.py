@@ -36,7 +36,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Initialize FastMCP server
-mcp = FastMCP("GPT Researcher")
+mcp = FastMCP(
+    name="GPT Researcher",
+    host="0.0.0.0",   # add this to make it work with docker (not sure why)
+    port=8000,
+)
 
 # Initialize researchers dictionary
 if not hasattr(mcp, "researchers"):
@@ -274,16 +278,40 @@ def run_server():
     if not os.getenv("OPENAI_API_KEY"):
         logger.error("OPENAI_API_KEY not found. Please set it in your .env file.")
         return
+
+    # Determine transport based on environment
+    transport = os.getenv("MCP_TRANSPORT", "stdio").lower()
+    
+    # Auto-detect Docker environment
+    if os.path.exists("/.dockerenv") or os.getenv("DOCKER_CONTAINER"):
+        transport = "sse"
+        logger.info("Docker environment detected, using SSE transport")
     
     # Add startup message
-    logger.info("Starting GPT Researcher MCP Server...")
-    print("🚀 GPT Researcher MCP Server starting... Check researcher_mcp_server.log for details")
-    
+    logger.info(f"Starting GPT Researcher MCP Server with {transport} transport...")
+    print(f"🚀 GPT Researcher MCP Server starting with {transport} transport...")
+    print("   Check researcher_mcp_server.log for details")
+
     # Let FastMCP handle the event loop
     try:
-        mcp.run()
+        if transport == "stdio":
+            logger.info("Using STDIO transport (Claude Desktop compatible)")
+            mcp.run(transport="stdio")
+        elif transport == "sse":
+            logger.info(f"Using SSE transport on {mcp.host}:{mcp.port}")
+            print(f"   Server available at http://{mcp.host}:{mcp.port}/sse")
+            mcp.run(transport="sse")
+        elif transport == "streamable-http":
+            logger.info(f"Using Streamable HTTP transport on {mcp.host}:{mcp.port}")
+            print(f"   Server available at http://{mcp.host}:{mcp.port}/mcp")
+            mcp.run(transport="streamable-http")
+        else:
+            raise ValueError(f"Unsupported transport: {transport}")
+            
         # Note: If we reach here, the server has stopped
-        logger.info("MCP Server has stopped")
+        logger.info("MCP Server is running...")
+        while True:
+            pass  # Keep the process alive
     except Exception as e:
         logger.error(f"Error running MCP server: {str(e)}")
         print(f"❌ MCP Server error: {str(e)}")

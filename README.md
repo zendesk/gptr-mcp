@@ -24,6 +24,37 @@ GPT Researcher autonomously explores and validates numerous sources, focusing on
 ## 💻 Claude Desktop Demo
 https://github.com/user-attachments/assets/ef97eea5-a409-42b9-8f6d-b82ab16c52a8
 
+## 🚀 Quick Start with Claude Desktop
+
+**Want to use this with Claude Desktop right away?** Here's the fastest path:
+
+1. **Install dependencies:**
+   ```bash
+   git clone https://github.com/assafelovic/gpt-researcher.git
+   cd gpt-researcher/gptr-mcp
+   pip install -r requirements.txt
+   ```
+
+2. **Set up your Claude Desktop config** at `~/Library/Application Support/Claude/claude_desktop_config.json`:
+   ```json
+   {
+     "mcpServers": {
+       "gptr-mcp": {
+         "command": "python",
+         "args": ["/absolute/path/to/gpt-researcher/gptr-mcp/server.py"],
+         "env": {
+           "OPENAI_API_KEY": "your-openai-key-here",
+           "TAVILY_API_KEY": "your-tavily-key-here"
+         }
+       }
+     }
+   }
+   ```
+
+3. **Restart Claude Desktop** and start researching! 🎉
+
+For detailed setup instructions, see the [full Claude Desktop Integration section](#-claude-desktop-integration) below.
+
 ### Resources
 - `research_resource`: Get web resources related to a given task via research.
 
@@ -48,6 +79,8 @@ Before running the MCP server, make sure you have:
 2. API keys for the services you plan to use:
    - [OpenAI API key](https://platform.openai.com/api-keys)
    - [Tavily API key](https://app.tavily.com)
+
+You can also connect any other web search engines or MCP using GPTR supported retrievers. Check out the [docs here](https://docs.gptr.dev/docs/gpt-researcher/search-engines)
 
 ## ⚙️ Installation
 
@@ -93,50 +126,139 @@ mcp run server.py
 
 ### Method 3: Using Docker (recommended for production)
 
-#### Option A: Standalone Mode
+#### Quick Start
 
-This is the simplest way to run the server if you don't need to connect to other containers:
-
-```bash
-# Build and run with docker-compose
-docker-compose -f docker-compose.standalone.yml up -d
-
-# Or manually:
-docker build -t gpt-mcp-server .
-docker run -d \
-  --name gpt-mcp-server \
-  -p 8000:8000 \
-  --env-file .env \
-  gpt-mcp-server
-```
-
-#### Option B: With Network for n8n Integration
-
-If you need to connect to other services like n8n on the same network:
+The simplest way to run with Docker:
 
 ```bash
-# Create the network if it doesn't exist
-docker network create n8n-mcp-net
-
 # Build and run with docker-compose
 docker-compose up -d
 
 # Or manually:
-docker build -t gpt-mcp-server .
+docker build -t gptr-mcp .
 docker run -d \
-  --name gpt-mcp-server \
-  --network n8n-mcp-net \
+  --name gptr-mcp \
   -p 8000:8000 \
   --env-file .env \
-  gpt-mcp-server
+  gptr-mcp
+```
+
+#### For n8n Integration
+
+If you need to connect to an existing n8n network:
+
+```bash
+# First, start the container
+docker-compose up -d
+
+# Then connect to your n8n network
+docker network connect n8n-mcp-net gptr-mcp
+
+# Or create a shared network first
+docker network create n8n-mcp-net
+docker network connect n8n-mcp-net gptr-mcp
 ```
 
 **Note**: The Docker image uses Python 3.11 to meet the requirements of gpt-researcher >=0.12.16. If you encounter errors during the build, ensure you're using the latest Dockerfile from this repository.
 
 Once the server is running, you'll see output indicating that the server is ready to accept connections. You can verify it's working by:
 
-1. Accessing the OpenAPI docs at http://localhost:8000/docs
-2. Testing the MCP endpoint at http://localhost:8000/mcp
+1. **SSE Endpoint**: Access the Server-Sent Events endpoint at http://localhost:8000/sse to get a session ID
+2. **MCP Communication**: Use the session ID to send MCP messages to http://localhost:8000/messages/?session_id=YOUR_SESSION_ID
+3. **Testing**: Run the test script with `python test_mcp_server.py`
+
+**Important for Docker/n8n Integration:**
+- The server binds to `0.0.0.0:8000` to work with Docker containers
+- Uses SSE transport for web-based MCP communication  
+- Session management requires getting a session ID from `/sse` endpoint first
+- Each client connection needs a unique session ID for proper communication
+
+## 🚦 Transport Modes & Best Practices
+
+The GPT Researcher MCP server supports multiple transport protocols and automatically chooses the best one for your environment:
+
+### Transport Types
+
+| Transport | Use Case | When to Use |
+|-----------|----------|-------------|
+| **STDIO** | Claude Desktop, Local MCP clients | Default for local development |
+| **SSE** | Docker, Web clients, n8n integration | Auto-enabled in Docker |
+| **Streamable HTTP** | Modern web deployments | Advanced web deployments |
+
+### Automatic Detection
+
+The server automatically detects your environment:
+
+```bash
+# Local development (default)
+python server.py
+# ➜ Uses STDIO transport (Claude Desktop compatible)
+
+# Docker environment  
+docker run gptr-mcp
+# ➜ Auto-detects Docker, uses SSE transport
+
+# Manual override
+export MCP_TRANSPORT=sse
+python server.py
+# ➜ Forces SSE transport
+```
+
+### Environment Variables
+
+| Variable | Description | Default | Example |
+|----------|-------------|---------|---------|
+| `MCP_TRANSPORT` | Force specific transport | `stdio` | `sse`, `streamable-http` |
+| `DOCKER_CONTAINER` | Force Docker mode | Auto-detected | `true` |
+
+### Configuration Examples
+
+#### For Claude Desktop (Local)
+```json
+// ~/Library/Application Support/Claude/claude_desktop_config.json
+{
+  "mcpServers": {
+    "gpt-researcher": {
+      "command": "python",
+      "args": ["/absolute/path/to/server.py"]
+    }
+  }
+}
+```
+
+#### For Docker/Web Deployment
+```bash
+# Set transport explicitly for web deployment
+export MCP_TRANSPORT=sse
+python server.py
+
+# Or use Docker (auto-detects)
+docker-compose up -d
+```
+
+#### For n8n MCP Integration
+```bash
+# Use the container name as hostname
+docker run --name gptr-mcp -p 8000:8000 gptr-mcp
+
+# In n8n, connect to: http://gptr-mcp:8000/sse
+```
+
+### Transport Endpoints
+
+When using SSE or HTTP transports:
+
+- **Health Check**: `GET /health`
+- **SSE Endpoint**: `GET /sse` (get session ID)
+- **MCP Messages**: `POST /messages/?session_id=YOUR_SESSION_ID`
+
+### Best Practices
+
+1. **Local Development**: Use default STDIO for Claude Desktop
+2. **Production**: Use Docker with automatic SSE detection
+3. **Testing**: Use health endpoints to verify connectivity
+4. **n8n Integration**: Always use container networking with Docker
+5. **Web Deployment**: Consider Streamable HTTP for modern clients
 
 ## Integrating with Claude
 
@@ -153,8 +275,61 @@ To integrate your locally running MCP server with Claude for Mac, you'll need to
 1. Make sure the MCP server is installed and running
 2. Configure Claude Desktop:
    - Locate or create the configuration file at `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Add your local GPT Researcher MCP server to the configuration
+   - Add your local GPT Researcher MCP server to the configuration **with environment variables**
    - Restart Claude to apply the configuration
+
+### ⚠️ Important: Environment Variables Required
+
+Claude Desktop launches your MCP server as a separate subprocess, so you **must** explicitly pass your API keys in the configuration. The server cannot access your shell's environment variables or `.env` file automatically.
+
+### Configuration Example
+
+```json
+{
+  "mcpServers": {
+    "gptr-mcp": {
+      "command": "python",
+      "args": ["/absolute/path/to/your/server.py"],
+      "env": {
+        "OPENAI_API_KEY": "your-actual-openai-key-here",
+        "TAVILY_API_KEY": "your-actual-tavily-key-here"
+      }
+    }
+  }
+}
+```
+
+### Security Note
+
+**🔒 Your Claude Desktop config contains sensitive API keys.** Protect it:
+
+```bash
+chmod 600 ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+Never commit this file to version control.
+
+### Alternative: Environment Variable Script
+
+For better security, create a wrapper script:
+
+**run_gptr_mcp.sh**:
+```bash
+#!/bin/bash
+source /path/to/your/.env
+python /absolute/path/to/server.py
+```
+
+Then use it in Claude Desktop:
+```json
+{
+  "mcpServers": {
+    "gptr-mcp": {
+      "command": "/absolute/path/to/run_gptr_mcp.sh"
+    }
+  }
+}
+```
 
 For complete step-by-step instructions, see the [Claude Desktop Integration guide](https://docs.gptr.dev/docs/gpt-researcher/mcp-server/claude-integration).
 
@@ -204,33 +379,96 @@ Claude: Based on my research, here's a comprehensive analysis of NVIDIA's curren
 
 If you encounter issues while running the MCP server:
 
-1. Make sure your API keys are correctly set in the `.env` file
-2. Check that you're using Python 3.11 or higher (required by gpt-researcher >=0.12.16)
-3. Ensure all dependencies are installed correctly
-4. Check the server logs for error messages
+### General Issues
 
-If you're running with Docker and experiencing issues:
+1. **API Keys**: Make sure your API keys are correctly set in the `.env` file
+2. **Python Version**: Check that you're using Python 3.11 or higher (required by gpt-researcher >=0.14.0)  
+3. **Dependencies**: Ensure all dependencies are installed correctly: `pip install -r requirements.txt`
+4. **Server Logs**: Check the server logs for error messages
 
-1. Verify the container is running: `docker ps | grep gpt-mcp-server`
-2. Check container logs: `docker logs gpt-mcp-server`
-3. Confirm the server is binding to all interfaces - logs should show listening on 0.0.0.0:8000
-4. If you see dependency errors during build:
-   - Ensure you're using the updated Dockerfile with Python 3.11
-   - Try rebuilding with the `--no-cache` flag: `docker build --no-cache -t gpt-mcp-server .`
-   - Check the version of gpt-researcher in your requirements.txt matches the Python version
+### Docker Issues
 
-For local installation issues:
+1. **Container not accessible**: 
+   - Verify the container is running: `docker ps | grep gptr-mcp`
+   - Check container logs: `docker logs gptr-mcp`
+   - Confirm the server is binding to 0.0.0.0:8000 (logs should show this)
+
+2. **n8n Integration Issues**:
+   - Ensure both containers are on the same Docker network
+   - Use the container name `gptr-mcp` as the hostname in n8n
+   - Set the MCP server URL to: `http://gptr-mcp:8000/sse`
+
+3. **Session ID Issues**:
+   - The server uses SSE transport which requires session management
+   - First, get a session ID by connecting to `/sse` endpoint
+   - Use the session ID in subsequent MCP requests: `/messages/?session_id=YOUR_ID`
+   - Each client needs its own session ID
+
+### n8n MCP Integration Steps
+
+1. **Get Session ID**:
+   ```bash
+   curl http://gptr-mcp:8000/sse
+   # Look for: data: /messages/?session_id=XXXXX
+   ```
+
+2. **Initialize MCP**:
+   ```bash
+   curl -X POST http://gptr-mcp:8000/messages/?session_id=YOUR_SESSION_ID \
+     -H "Content-Type: application/json" \
+     -d '{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {"roots": {"listChanged": true}}, "clientInfo": {"name": "n8n-client", "version": "1.0.0"}}}'
+   ```
+
+3. **Call Tools**:
+   ```bash
+   curl -X POST http://gptr-mcp:8000/messages/?session_id=YOUR_SESSION_ID \
+     -H "Content-Type: application/json" \
+     -d '{"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "quick_search", "arguments": {"query": "test"}}}'
+   ```
+
+### Testing the Server
+
+Run the included test script to verify functionality:
+
 ```bash
-# Check your Python version (must be 3.11+)
-python --version
-
-# Update pip to the latest version
-pip install --upgrade pip
-
-# If you're using a virtual environment, create a new one with Python 3.11
-python3.11 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python test_mcp_server.py
 ```
+
+This will test:
+- SSE connection and session ID retrieval
+- MCP initialization  
+- Tool discovery and execution
+
+### Claude Desktop Issues
+
+If your MCP server isn't working with Claude Desktop:
+
+1. **Server not appearing in Claude**:
+   - Check your `claude_desktop_config.json` syntax is valid JSON
+   - Ensure you're using **absolute paths** (not relative)
+   - Verify the path to `server.py` is correct
+   - Restart Claude Desktop completely
+
+2. **"OPENAI_API_KEY not found" error**:
+   - Make sure you added API keys to the `env` section in your config
+   - Don't forget **both** `OPENAI_API_KEY` and `TAVILY_API_KEY`
+   - API keys should be the actual keys, not placeholders
+
+3. **Tools not showing up**:
+   - Look for the 🔧 tools icon in Claude Desktop
+   - Check that Claude Desktop config file is in the right location:
+     - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+     - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+4. **Python/Permission issues**:
+   - Make sure Python is accessible from the command line: `python --version`
+   - Try using full Python path: `"command": "/usr/bin/python3"` or `"command": "python3"`
+   - Check file permissions on your server.py file
+
+5. **Still not working?**
+   - Test the server manually: `python server.py` (should show STDIO transport message)
+   - Check Claude Desktop logs (if available)
+   - Try the alternative script method from the integration section above
 
 ## 👣 Next Steps
 
