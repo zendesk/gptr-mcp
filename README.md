@@ -30,8 +30,7 @@ https://github.com/user-attachments/assets/ef97eea5-a409-42b9-8f6d-b82ab16c52a8
 
 1. **Install dependencies:**
    ```bash
-   git clone https://github.com/assafelovic/gpt-researcher.git
-   cd gpt-researcher/gptr-mcp
+   git clone https://github.com/assafelovic/gptr-mcp.git
    pip install -r requirements.txt
    ```
 
