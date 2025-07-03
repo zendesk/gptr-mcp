@@ -11,7 +11,7 @@ import uuid
 import logging
 from typing import Dict, Any, Optional, List
 from dotenv import load_dotenv
-from fastmcp import FastMCP
+from fastmcp import Context, FastMCP
 from gpt_researcher import GPTResearcher
 
 # Load environment variables
@@ -90,13 +90,14 @@ async def research_resource(topic: str) -> str:
 
 
 @mcp.tool()
-async def deep_research(query: str) -> Dict[str, Any]:
+async def deep_research(query: str, deep: bool, ctx: Context) -> Dict[str, Any]:
     """
     Conduct a web deep research on a given query using GPT Researcher. 
     Use this tool when you need time-sensitive, real-time information like stock prices, news, people, specific knowledge, etc.
     
     Args:
         query: The research query or topic
+        deep: Whether to perform a deep research (more thorough, longer context)
         
     Returns:
         Dict containing research status, ID, and the actual research context and sources
@@ -108,11 +109,13 @@ async def deep_research(query: str) -> Dict[str, Any]:
     research_id = str(uuid.uuid4())
     
     # Initialize GPT Researcher
-    researcher = GPTResearcher(query)
+    researcher = GPTResearcher(query, report_type="deep" if deep else "research_report")
     
     # Start research
     try:
-        await researcher.conduct_research()
+        # Conduct the research with progress reporting
+        logger.info(f"Starting research for ID: {research_id}")
+        await researcher.conduct_research(on_progress=lambda progress: ctx.report_progress(progress.completed_queries, progress.total_queries, progress.current_query))
         mcp.researchers[research_id] = researcher
         logger.info(f"Research completed for ID: {research_id}")
         
