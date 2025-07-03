@@ -115,7 +115,9 @@ async def deep_research(query: str, deep: bool, ctx: Context) -> Dict[str, Any]:
     try:
         # Conduct the research with progress reporting
         logger.info(f"Starting research for ID: {research_id}")
-        await researcher.conduct_research(on_progress=lambda progress: ctx.report_progress(progress.completed_queries, progress.total_queries, progress.current_query))
+        async def report_progress(progress):
+            await ctx.report_progress(progress.completed_queries, progress.total_queries, progress.current_query)
+        await researcher.conduct_research(on_progress=report_progress)
         mcp.researchers[research_id] = researcher
         logger.info(f"Research completed for ID: {research_id}")
         
