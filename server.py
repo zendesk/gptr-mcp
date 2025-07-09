@@ -29,7 +29,7 @@ from utils import (
 )
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG if os.getenv("DEBUG") else logging.INFO,
     format='[%(asctime)s][%(levelname)s] - %(message)s',
 )
 
